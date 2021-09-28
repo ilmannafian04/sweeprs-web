@@ -1,0 +1,52 @@
+name: CI
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  ws:
+    name: WS CI
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo
+      - name: setup rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+      - name: compile source
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+      - name: run clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --workspace
+      - name: test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+  ui:
+    name: UI CI
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - name: Install pnpm
+        run: curl -f https://get.pnpm.io/v6.14.js | node - add --global pnpm@6
+      - name: build dep
+        run: pnpm install --frozen-lockfile --dir ./ui
