@@ -4,7 +4,7 @@ on:
 
 jobs:
   ws:
-    name: WS CI
+    name: WS
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -36,7 +36,7 @@ jobs:
         with:
           command: test
   ui:
-    name: UI CI
+    name: UI
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -48,3 +48,5 @@ jobs:
         run: curl -f https://get.pnpm.io/v6.14.js | node - add --global pnpm@6
       - name: build dep
         run: pnpm install --frozen-lockfile --dir ./ui
+      - name: build app
+        run: pnpm run build --dir ./ui
