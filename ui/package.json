@@ -30,11 +30,6 @@
   },
   "type": "module",
   "lint-staged": {
-    "src/**/*.{svelte,ts,js,css,postcss}": "pnpm run format"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "src/**/*.{svelte,ts,js,html,css,postcss}": "pnpm run format"
   }
 }
